@@ -33,14 +33,14 @@ pipeline {
             }
             steps {
                 sh "docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest"
-                sh "docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:$MONGO_VERSION"
-                sh "docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:$MONGO_VERSION-$OS_VERSION"
+                sh "docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:$NODERED_VERSION"
+                sh "docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:$NODERED_VERSION-$OS_VERSION"
 
                 sh "echo $DOCKER_CREDS_PSW | docker login --username $DOCKER_CREDS_USR --password-stdin"
 
                 sh "docker push $IMAGE_NAME:latest"
-                sh "docker push $IMAGE_NAME:$MONGO_VERSION"
-                sh "docker push $IMAGE_NAME:$MONGO_VERSION-$OS_VERSION"
+                sh "docker push $IMAGE_NAME:$NODERED_VERSION"
+                sh "docker push $IMAGE_NAME:$NODERED_VERSION-$OS_VERSION"
             }
         }
     }
