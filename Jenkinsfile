@@ -26,6 +26,7 @@ pipeline {
                   sed -i $NODE_RED_MAKE -e 's/NODE_VERSION=12/NODE_VERSION=10/'
                   sed -i $NODE_RED_MAKE -e s/testing:node-red-build/\$(echo $IMAGE_NAME | sed 's/\\//\\\\\\//'):$IMAGE_TAG/
 
+                  # BASE
                   # Adjust $DOCKERFILE to Debian: use apt-get
                   sed -i $DOCKERFILE -e 's/apk add --no-cache/apt-get update \\&\\& apt-get install -y/'
                   sed -i $DOCKERFILE -e 's/--virtual buildtools//'
@@ -38,10 +39,14 @@ pipeline {
                   sed -i $DOCKERFILE -e 's/adduser -h/adduser --home/'
                   sed -i $DOCKERFILE -e 's/-D -H/--disabled-password --no-create-home --gecos \"\"/'
                   sed -i $DOCKERFILE -e 's/-u 1000/--uid 1000/'
+
+                  # BUILD
                   # use apt-get, hide packages not found, add required (for netstat, irsend)
                   sed -i $DOCKERFILE -e 's/build-base linux-headers udev//'
                   sed -i ./scripts/install_devtools.sh -e 's/apk add --no-cache --virtual devtools/apt-get install -y/'
                   sed -i ./scripts/install_devtools.sh -e 's/build-base linux-headers udev/musl net-tools lirc sudo/'
+
+                  # RELEASE
                   # Update from Dockerfile.alpine
                   sed -i $DOCKERFILE -e 's/Dockerfile.alpine/$DOCKERFILE/'
 
