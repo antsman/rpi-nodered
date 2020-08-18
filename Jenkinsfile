@@ -50,7 +50,7 @@ pipeline {
                   # Update from Dockerfile.alpine
                   sed -i $DOCKERFILE -e 's/Dockerfile.alpine/$DOCKERFILE/'
 
-                  cat $NODE_RED_MAKE
+                  # cat $NODE_RED_MAKE
                   ./$NODE_RED_MAKE
                 """
             }
@@ -58,11 +58,9 @@ pipeline {
         stage('TEST') {
             steps {
                 sh "docker run -d --rm --name $CONTAINER_NAME $IMAGE_NAME:$IMAGE_TAG"
-                // Get nodered, os version in started container, store in version.properties
+                // Get nodered, node, os version in started container, store in version.properties
                 sh "./get-versions.sh $CONTAINER_NAME"
                 load './version.properties'
-                // echo "$NODERED_VERSION"
-                // echo "$OS_VERSION"
                 echo 'Sleep short, to allow Node-RED to start'
                 sh 'date'
                 sleep 5
@@ -77,13 +75,15 @@ pipeline {
             steps {
                 sh "docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest"
                 sh "docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:$NODERED_VERSION"
-                sh "docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:$NODERED_VERSION-$OS_VERSION"
+                sh "docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:$NODERED_VERSION-node-$NODE_VERSION"
+                sh "docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:$NODERED_VERSION-node-$NODE_VERSION-$OS_VERSION"
 
                 sh "echo $DOCKER_CREDS_PSW | docker login --username $DOCKER_CREDS_USR --password-stdin"
 
                 sh "docker push $IMAGE_NAME:latest"
                 sh "docker push $IMAGE_NAME:$NODERED_VERSION"
-                sh "docker push $IMAGE_NAME:$NODERED_VERSION-$OS_VERSION"
+                sh "docker push $IMAGE_NAME:$NODERED_VERSION-node-$NODE_VERSION"
+                sh "docker push $IMAGE_NAME:$NODERED_VERSION-node-$NODE_VERSION-$OS_VERSION"
             }
         }
     }
