@@ -49,6 +49,8 @@ pipeline {
                   # RELEASE
                   # Update from Dockerfile.alpine
                   sed -i $DOCKERFILE -e 's/Dockerfile.alpine/$DOCKERFILE/'
+                  # Clean up apt cache
+                  sed -i $DOCKERFILE -e 's/rm -r \\/tmp\\/*/rm -r \\/tmp\\/* \\&\\& rm -rf \\/var\\/lib\\/apt\\/lists\\/*/'
 
                   # cat $NODE_RED_MAKE
                   ./$NODE_RED_MAKE
