@@ -23,6 +23,7 @@ pipeline {
                   # Change the build arguments as needed
                   sed -i $NODE_RED_MAKE -e 's/ARCH=amd64/ARCH=arm32v7/'
                   sed -i $NODE_RED_MAKE -e 's/OS=alpine/OS=buster/'
+                  sed -i $NODE_RED_MAKE -e 's/NODE_VERSION=12/NODE_VERSION=10/'
                   sed -i $NODE_RED_MAKE -e s/testing:node-red-build/\$(echo $IMAGE_NAME | sed 's/\\//\\\\\\//'):$IMAGE_TAG/
 
                   # Adjust $DOCKERFILE to Debian: use apt-get
@@ -43,7 +44,7 @@ pipeline {
                   sed -i ./scripts/install_devtools.sh -e 's/build-base linux-headers udev/net-tools lirc/'
 
                   cat $NODE_RED_MAKE
-                  # ./$NODE_RED_MAKE
+                  ./$NODE_RED_MAKE
                 """
             }
         }
