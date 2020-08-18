@@ -29,8 +29,7 @@ pipeline {
                   # BASE
                   # Adjust $DOCKERFILE to Debian: use apt-get
                   sed -i $DOCKERFILE -e 's/apk add --no-cache/apt-get update \\&\\& apt-get install -y/'
-                  sed -i $DOCKERFILE -e 's/--virtual buildtools//'
-                  # hide packages not found
+                  # cut packages not found
                   sed -i $DOCKERFILE -e 's/iputils//' # ping, traceroute
                   sed -i $DOCKERFILE -e 's/nano//'
                   # adduser
@@ -41,14 +40,15 @@ pipeline {
                   sed -i $DOCKERFILE -e 's/-u 1000/--uid 1000/'
 
                   # BUILD
-                  # use apt-get, hide packages not found, add required (for netstat, irsend)
-                  sed -i $DOCKERFILE -e 's/build-base linux-headers udev//'
-                  sed -i ./scripts/install_devtools.sh -e 's/apk add --no-cache --virtual devtools/apt-get install -y/'
-                  sed -i ./scripts/install_devtools.sh -e 's/build-base linux-headers udev/net-tools lirc/'
+                  # use apt-get, build-essential
+                  sed -i $DOCKERFILE -e 's/--virtual buildtools build-base linux-headers udev/build-essential/'
 
                   # RELEASE
                   # Update from Dockerfile.alpine
                   sed -i $DOCKERFILE -e 's/Dockerfile.alpine/$DOCKERFILE/'
+                  # Install devtools & Clean up
+                  sed -i ./scripts/install_devtools.sh -e 's/apk add --no-cache --virtual devtools/apt-get install -y/'
+                  sed -i ./scripts/install_devtools.sh -e 's/build-base linux-headers udev/build-essential net-tools lirc/'
                   # Clean up apt cache
                   sed -i $DOCKERFILE -e 's/rm -r \\/tmp\\/*/rm -r \\/tmp\\/* \\&\\& rm -rf \\/var\\/lib\\/apt\\/lists\\/*/'
 
