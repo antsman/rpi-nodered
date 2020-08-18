@@ -43,7 +43,7 @@ pipeline {
                   sed -i ./scripts/install_devtools.sh -e 's/build-base linux-headers udev/net-tools lirc/'
 
                   cat $NODE_RED_MAKE
-                  ./$NODE_RED_MAKE
+                  # ./$NODE_RED_MAKE
                 """
             }
         }
@@ -55,7 +55,9 @@ pipeline {
                 load './version.properties'
                 // echo "$NODERED_VERSION"
                 // echo "$OS_VERSION"
-                // sh "date"
+                echo 'Sleep short, to allow Node-RED to start'
+                sh 'date'
+                sleep 5
                 sh "docker exec -t $CONTAINER_NAME netstat -tlp | grep :1880 | grep node-red"
                 sh "time docker stop $CONTAINER_NAME"
             }
