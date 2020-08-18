@@ -44,7 +44,7 @@ pipeline {
                   # use apt-get, hide packages not found, add required (for netstat, irsend)
                   sed -i $DOCKERFILE -e 's/build-base linux-headers udev//'
                   sed -i ./scripts/install_devtools.sh -e 's/apk add --no-cache --virtual devtools/apt-get install -y/'
-                  sed -i ./scripts/install_devtools.sh -e 's/build-base linux-headers udev/musl net-tools lirc sudo/'
+                  sed -i ./scripts/install_devtools.sh -e 's/build-base linux-headers udev/net-tools lirc/'
 
                   # RELEASE
                   # Update from Dockerfile.alpine
