@@ -63,7 +63,7 @@ pipeline {
                 // Get nodered, node, os version in started container, store in version.properties
                 sh "./get-versions.sh $CONTAINER_NAME"
                 load './version.properties'
-                echo 'Sleep short, to allow Node-RED to start'
+                echo 'Sleep short, allow Node-RED to start'
                 sh 'date'
                 sleep 5
                 sh "docker exec -t $CONTAINER_NAME netstat -tlp | grep :1880 | grep node-red"
