@@ -7,10 +7,11 @@ pipeline {
         IMAGE_NAME = 'antsman/rpi-nodered'
         IMAGE_TAG = "ci-jenkins-$BRANCH_NAME"
         CONTAINER_NAME = "$BUILD_TAG"
-        NODE_RED_DOCKER = "https://github.com/node-red/node-red-docker"
-        NODE_RED_LOCAL = "node-red-docker"
-        NODE_RED_MAKE = "docker-make.sh"
-        DOCKERFILE = "Dockerfile.custom"
+        NODE_RED_DOCKER = 'https://github.com/node-red/node-red-docker'
+        NODE_RED_LOCAL = 'node-red-docker'
+        NODE_RED_MAKE = 'docker-make.sh'
+        DOCKERFILE = 'Dockerfile.custom'
+        DEVTOOLS = './scripts/install_devtools.sh'
     }
     stages {
         stage('BUILD') {
@@ -28,7 +29,7 @@ pipeline {
 
                   # BASE
                   # Adjust $DOCKERFILE to Debian: use apt-get
-                  sed -i $DOCKERFILE -e 's/apk add --no-cache/apt-get update \\&\\& apt-get install -y/'
+                  sed -i $DOCKERFILE -e 's/apk add --no-cache/apt-get update \\&\\& apt-get install -y -qq --no-install-recommends/'
                   # cut packages not found
                   sed -i $DOCKERFILE -e 's/iputils//' # ping, traceroute
                   sed -i $DOCKERFILE -e 's/nano//'
@@ -47,8 +48,8 @@ pipeline {
                   # Update from Dockerfile.alpine
                   sed -i $DOCKERFILE -e 's/Dockerfile.alpine/$DOCKERFILE/'
                   # Install devtools & Clean up
-                  sed -i ./scripts/install_devtools.sh -e 's/apk add --no-cache --virtual devtools/apt-get install -y/'
-                  sed -i ./scripts/install_devtools.sh -e 's/build-base linux-headers udev/build-essential net-tools lirc/'
+                  sed -i $DEVTOOLS -e 's/apk add --no-cache/apt-get install -y -qq --no-install-recommends/'
+                  sed -i $DEVTOOLS -e 's/--virtual devtools build-base linux-headers udev/build-essential net-tools lirc/'
                   # Clean up apt cache
                   sed -i $DOCKERFILE -e 's/rm -r \\/tmp\\/*/rm -r \\/tmp\\/* \\&\\& rm -rf \\/var\\/lib\\/apt\\/lists\\/*/'
 
