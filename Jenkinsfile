@@ -49,7 +49,7 @@ pipeline {
                   sed -i $DOCKERFILE -e 's/Dockerfile.alpine/$DOCKERFILE/'
                   # Install devtools & Clean up
                   sed -i $DEVTOOLS -e 's/apk add --no-cache/apt-get install -y -qq --no-install-recommends/'
-                  sed -i $DEVTOOLS -e 's/--virtual devtools build-base linux-headers udev/build-essential net-tools lirc/'
+                  sed -i $DEVTOOLS -e 's/--virtual devtools build-base linux-headers udev/build-essential net-tools procps lirc/'
                   # Clean up apt cache
                   sed -i $DOCKERFILE -e 's/rm -r \\/tmp\\/*/rm -r \\/tmp\\/* \\&\\& rm -rf \\/var\\/lib\\/apt\\/lists\\/*/'
 
