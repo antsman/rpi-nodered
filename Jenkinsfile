@@ -45,12 +45,12 @@ pipeline {
                   # sed -i $DOCKERFILE -e 's/--virtual buildtools build-base linux-headers udev/build-essential/'
 
                   # RELEASE
-                  # Update from Dockerfile.alpine
+                  # Update from Dockerfile.debian
                   ## sed -i $DOCKERFILE -e 's/Dockerfile.alpine/$DOCKERFILE/'
                   # Install devtools & Clean up
                   ## sed -i $DEVTOOLS -e 's/apk add --no-cache/apt-get install -y -qq --no-install-recommends/'
                   ## sed -i $DEVTOOLS -e 's/--virtual devtools build-base linux-headers udev/build-essential net-tools procps lirc/'
-                  sed -i $DEVTOOLS -e 's/build-essential python-dev/python-dev net-tools procps lirc/'
+                  sed -i $DOCKERFILE -e 's/build-essential python-dev/build-essential python-dev net-tools procps lirc/'
                   # Clean up apt cache
                   sed -i $DOCKERFILE -e 's/rm -r \\/tmp\\/*/rm -r \\/tmp\\/* \\&\\& rm -rf \\/var\\/lib\\/apt\\/lists\\/*/'
 
